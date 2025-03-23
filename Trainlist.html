@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Train List - IRCTC</title>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, rgba(106, 17, 203, 0.8), rgba(37, 117, 252, 0.8)), url('trainlist.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            color: white;
+        }
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        h2 {
+            color: white;
+        }
+        .search-container {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        input {
+            padding: 12px;
+            width: 85%;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.8);
+            color: #333;
+            outline: none;
+        }
+        input:focus {
+            background: white;
+        }
+        button {
+            padding: 12px 25px;
+            background: #ff9800;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #e68900;
+        }
+        .train-list {
+            margin-top: 20px;
+        }
+        .train-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            margin: 12px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: 0.3s;
+            color: #333;
+        }
+        .train-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+        .train-info {
+            text-align: left;
+        }
+        .train-info h3 {
+            margin: 5px 0;
+            color: #444;
+        }
+        .train-info p {
+            margin: 3px 0;
+            color: #666;
+            font-size: 14px;
+        }
+        .train-card .fa {
+            font-size: 18px;
+            color: #2575fc;
+            margin-right: 8px;
+        }
+        .book-btn {
+            padding: 10px 20px;
+            background: #ff5722;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        .book-btn:hover {
+            background: #e64a19;
+        }
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            max-height: 150px;
+            overflow-y: auto;
+            z-index: 99;
+            width: 85%;
+            background: white;
+            color: #333;
+        }
+        .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #ddd;
+        }
+        .autocomplete-items div:hover {
+            background: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🚆 Find Your Train</h2>
+        
+        <div class="search-container">
+            <div style="position: relative;">
+                <input type="text" id="fromStation" placeholder="🛤️ From Station">
+                <div class="autocomplete-items" id="from-suggestions"></div>
+            </div>
+            <div style="position: relative;">
+                <input type="text" id="toStation" placeholder="🏁 To Station">
+                <div class="autocomplete-items" id="to-suggestions"></div>
+            </div>
+        </div>
+
+        <button>🔍 Search Trains</button>
+
+        <div class="train-list">
+            <div class="train-card">
+                <div class="train-info">
+                    <h3><i class="fa fa-train"></i> Rajdhani Express</h3>
+                    <p><i class="fa fa-map-marker"></i> New Delhi → Mumbai Central</p>
+                    <p><i class="fa fa-clock"></i> Departure: 10:00 AM | Arrival: 6:00 PM</p>
+                    <p><i class="fa fa-hourglass-half"></i> Duration: 8h</p>
+                    <p><i class="fa fa-ticket-alt"></i> Available Seats: 35</p>
+                </div>
+                <button class="book-btn">🚀 Book Now</button>
+            </div>
+
+            <div class="train-card">
+                <div class="train-info">
+                    <h3><i class="fa fa-train"></i> Duronto Express</h3>
+                    <p><i class="fa fa-map-marker"></i> Howrah Junction → Chennai Central</p>
+                    <p><i class="fa fa-clock"></i> Departure: 9:30 AM | Arrival: 8:00 PM</p>
+                    <p><i class="fa fa-hourglass-half"></i> Duration: 10.5h</p>
+                    <p><i class="fa fa-ticket-alt"></i> Available Seats: 22</p>
+                </div>
+                <button class="book-btn">🚀 Book Now</button>
+            </div>
+
+            <div class="train-card">
+                <div class="train-info">
+                    <h3><i class="fa fa-train"></i> Shatabdi Express</h3>
+                    <p><i class="fa fa-map-marker"></i> Bangalore City → Chennai Central</p>
+                    <p><i class="fa fa-clock"></i> Departure: 7:15 AM | Arrival: 1:45 PM</p>
+                    <p><i class="fa fa-hourglass-half"></i> Duration: 6.5h</p>
+                    <p><i class="fa fa-ticket-alt"></i> Available Seats: 48</p>
+                </div>
+                <button class="book-btn">🚀 Book Now</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // List of stations (you can expand this list)
+        const stations = [
+            "New Delhi (NDLS)",
+            "Mumbai Central (BCT)",
+            "Howrah Junction (HWH)",
+            "Chennai Central (MAS)",
+            "Bangalore City (SBC)",
+            "Secunderabad Junction (SC)",
+            "Ahmedabad Junction (ADI)",
+            "Pune Junction (PUNE)",
+            "Jaipur Junction (JP)",
+            "Lucknow Junction (LJN)",
+            "Kolkata (KOAA)",
+            "Hyderabad Deccan (HYD)",
+            "Patna Junction (PNBE)",
+            "Guwahati (GHY)",
+            "Chandigarh (CDG)"
+        ];
+
+        // Function to show autocomplete suggestions
+        function autocomplete(input, suggestionsContainer) {
+            input.addEventListener("input", function () {
+                const value = this.value.toLowerCase();
+                suggestionsContainer.innerHTML = ""; // Clear previous suggestions
+
+                if (!value) return;
+
+                const filteredStations = stations.filter(station =>
+                    station.toLowerCase().includes(value)
+                );
+
+                filteredStations.forEach(station => {
+                    const div = document.createElement("div");
+                    div.textContent = station;
+                    div.addEventListener("click", function () {
+                        input.value = station;
+                        suggestionsContainer.innerHTML = "";
+                    });
+                    suggestionsContainer.appendChild(div);
+                });
+            });
+
+            // Hide suggestions when clicking outside
+            document.addEventListener("click", function (e) {
+                if (e.target !== input) {
+                    suggestionsContainer.innerHTML = "";
+                }
+            });
+        }
+
+        // Initialize autocomplete for "From" and "To" fields
+        autocomplete(document.getElementById("fromStation"), document.getElementById("from-suggestions"));
+        autocomplete(document.getElementById("toStation"), document.getElementById("to-suggestions"));
+    </script>
+</body>
+</html>

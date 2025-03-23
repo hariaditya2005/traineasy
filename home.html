@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IRCTC - Train Search</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    /* Custom styles for hover effects */
+    .package-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .package-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Custom styles for images */
+    .package-image {
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px 8px 0 0;
+    }
+
+    /* Login page styles */
+    #loginPage {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #4A90E2, #9013FE);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .login-container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+      width: 350px;
+      text-align: center;
+      transform: scale(0.95);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .login-container:hover {
+      transform: scale(1);
+    }
+
+    .login-container h2 {
+      margin-bottom: 20px;
+      color: #333;
+      font-size: 24px;
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+      text-align: left;
+      position: relative;
+    }
+
+    .input-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+
+    .input-group input {
+      width: 95%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: all 0.3s ease-in-out;
+      background: #f9f9f9;
+    }
+
+    .input-group input:focus {
+      border-color: #4A90E2;
+      box-shadow: 0px 0px 10px rgba(74, 144, 226, 0.5);
+      background: white;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      background: linear-gradient(135deg, #4A90E2, #9013FE);
+      color: white;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s ease-in-out, background 0.3s ease-in-out;
+    }
+
+    .btn:hover {
+      background: linear-gradient(135deg, #357ABD, #7A0CF7);
+      transform: scale(1.05);
+    }
+
+    .extra-links {
+      margin-top: 15px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .extra-links a {
+      text-decoration: none;
+      color: #4A90E2;
+      font-size: 14px;
+      transition: color 0.3s ease-in-out;
+    }
+
+    .extra-links a:hover {
+      color: #9013FE;
+    }
+
+    /* Hide home page initially */
+    #homePage {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Login Page -->
+  <div id="loginPage">
+    <div class="login-container">
+      <h2>Login to IRCTC</h2>
+      <form id="loginForm">
+        <div class="input-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" placeholder="Enter your username" required>
+        </div>
+
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter your password" required>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="remember-me">
+          <label for="remember-me">Remember Me</label>
+        </div>
+
+        <button type="submit" class="btn">Login</button>
+
+        <div class="extra-links">
+          <a href="#">Forgot Password?</a>
+          <a href="signup.html">Create an Account</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Home Page -->
+  <div id="homePage" class="bg-gray-100">
+    <!-- Navbar -->
+<nav class="bg-blue-600 text-white p-4">
+  <div class="container mx-auto flex justify-between items-center">
+    <div class="flex items-center space-x-2">
+      <!-- IRCTC Logo -->
+      <img src="irctclogo.png" alt="IRCTC Logo" class="h-8 w-auto">
+      <!-- IRCTC Name -->
+      <h1 class="text-2xl font-bold">IRCTC</h1>
+    </div>
+    <div class="flex space-x-6">
+      <a href="Trainbooking.html" class="hover:text-gray-200">Train Booking</a>
+      <a href="Trainlist.html" class="hover:text-gray-200">Train Schedule</a>
+      <a href="Tracktrain.html" class="hover:text-gray-200">PNR Status</a>
+      <span id="usernameDisplay" class="hover:text-gray-200"></span>
+    </div>
+  </div>
+</nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto p-4">
+      <div class="bg-white p-6 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-bold mb-4">Search Trains</h2>
+        <form id="trainSearchForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- From Station -->
+          <div>
+            <label for="fromStation" class="block text-sm font-medium text-gray-700">From</label>
+            <input type="text" id="fromStation" name="fromStation" placeholder="Enter source station"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+          </div>
+
+          <!-- To Station -->
+          <div>
+            <label for="toStation" class="block text-sm font-medium text-gray-700">To</label>
+            <input type="text" id="toStation" name="toStation" placeholder="Enter destination station"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+          </div>
+
+          <!-- Date Picker -->
+          <div>
+            <label for="travelDate" class="block text-sm font-medium text-gray-700">Travel Date</label>
+            <input type="date" id="travelDate" name="travelDate"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+          </div>
+
+          <!-- Class Dropdown -->
+          <div>
+            <label for="class" class="block text-sm font-medium text-gray-700">Class</label>
+            <select id="class" name="class"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+              <option value="ALL">All Classes</option>
+              <option value="SL">Sleeper (SL)</option>
+              <option value="3A">AC 3-Tier (3A)</option>
+              <option value="2A">AC 2-Tier (2A)</option>
+              <option value="1A">AC 1st Class (1A)</option>
+            </select>
+          </div>
+
+          <!-- Quota Dropdown -->
+          <div>
+            <label for="quota" class="block text-sm font-medium text-gray-700">Quota</label>
+            <select id="quota" name="quota"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+              <option value="GN">General</option>
+              <option value="LD">Ladies</option>
+              <option value="TQ">Tatkal</option>
+              <option value="PT">Premium Tatkal</option>
+            </select>
+          </div>
+
+          <!-- Search Button -->
+          <div class="md:col-span-2 lg:col-span-4">
+            <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              Search Trains
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Services Section -->
+    <div class="container mx-auto p-4 mt-6">
+      <h2 class="text-2xl font-bold mb-4">Explore Our Services</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <!-- Flights -->
+        <a href="https://www.air.irctc.co.in/" class="bg-white p-4 rounded-lg shadow-md text-center hover:shadow-lg transition-shadow">
+          <i class="fas fa-plane text-3xl text-blue-600"></i>
+          <p class="mt-2 text-gray-700">Flights</p>
+        </a>
+
+        <!-- Hotels -->
+        <a href="https://www.hotels.irctc.co.in/" class="bg-white p-4 rounded-lg shadow-md text-center hover:shadow-lg transition-shadow">
+          <i class="fas fa-hotel text-3xl text-blue-600"></i>
+          <p class="mt-2 text-gray-700">Hotels</p>
+        </a>
+
+        <!-- Rail Darshan -->
+        <a href="https://raildrishti.indianrailways.gov.in/raildrishti/raildrishtiv3/" class="bg-white p-4 rounded-lg shadow-md text-center hover:shadow-lg transition-shadow">
+          <i class="fas fa-train text-3xl text-blue-600"></i>
+          <p class="mt-2 text-gray-700">Rail Darshan</p>
+        </a>
+
+        <!-- E-Catering -->
+        <a href="https://www.ecatering.irctc.co.in/" class="bg-white p-4 rounded-lg shadow-md text-center hover:shadow-lg transition-shadow">
+          <i class="fas fa-utensils text-3xl text-blue-600"></i>
+          <p class="mt-2 text-gray-700">E-Catering</p>
+        </a>
+
+        <!-- Bus -->
+        <a href="https://www.bus.irctc.co.in/home" class="bg-white p-4 rounded-lg shadow-md text-center hover:shadow-lg transition-shadow">
+          <i class="fas fa-bus text-3xl text-blue-600"></i>
+          <p class="mt-2 text-gray-700">Bus</p>
+        </a>
+
+        <!-- Holiday Packages -->
+        <a href="https://www.irctctourism.com/tourpacakage_search?searchKey=&tagType=&travelType=&category=" class="bg-white p-4 rounded-lg shadow-md text-center hover:shadow-lg transition-shadow">
+          <i class="fas fa-suitcase text-3xl text-blue-600"></i>
+          <p class="mt-2 text-gray-700">Holiday Packages</p>
+        </a>
+
+        <!-- Tourist Train -->
+        <a href="https://www.irctctourism.com/bharatgaurav" class="bg-white p-4 rounded-lg shadow-md text-center hover:shadow-lg transition-shadow">
+          <i class="fas fa-train-tram text-3xl text-blue-600"></i>
+          <p class="mt-2 text-gray-700">Tourist Train</p>
+        </a>
+
+        <!-- Hill Railways -->
+        <a href="https://www.irctctourism.com/gallery/" class="bg-white p-4 rounded-lg shadow-md text-center hover:shadow-lg transition-shadow">
+          <i class="fas fa-mountain text-3xl text-blue-600"></i>
+          <p class="mt-2 text-gray-700">Hill Railways</p>
+        </a>
+
+        <!-- Charter Train -->
+        <a href="https://www.ftr.irctc.co.in/ftr/" class="bg-white p-4 rounded-lg shadow-md text-center hover:shadow-lg transition-shadow">
+          <i class="fas fa-train text-3xl text-blue-600"></i>
+          <p class="mt-2 text-gray-700">Charter Train</p>
+        </a>
+
+        <!-- Gallery -->
+        <a href="https://www.irctctourism.com/gallery/" class="bg-white p-4 rounded-lg shadow-md text-center hover:shadow-lg transition-shadow">
+          <i class="fas fa-images text-3xl text-blue-600"></i>
+          <p class="mt-2 text-gray-700">Gallery</p>
+        </a>
+      </div>
+    </div>
+
+    <!-- Packages Section -->
+    <div class="container mx-auto p-4 mt-6">
+      <h2 class="text-2xl font-bold mb-4">Featured Packages</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Maharajas’ Express -->
+        <div class="package-card bg-white rounded-lg shadow-md overflow-hidden">
+          <img src="maharajaexpress.jpeg" alt="Maharajas’ Express" class="package-image w-full">
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-blue-600">Maharajas’ Express</h3>
+            <p class="mt-2 text-gray-600">
+              Redefining Royalty, Luxury and Comfort, Maharajas’ express takes you on a sojourn to the era of bygone stately splendour of princely states. Sylvan furnishings, elegant ambience and modern amenities are amalgamated for an “Experience Unsurpassed”. It has been a winner of “World’s Leading Luxury train” by World Travel Awards consecutively for last six years.
+            </p>
+          </div>
+        </div>
+
+        <!-- International Packages -->
+        <div class="package-card bg-white rounded-lg shadow-md overflow-hidden" id="holiday">
+          <img src="international.jpeg" alt="International Packages" class="package-image w-full">
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-blue-600">International Packages</h3>
+            <p class="mt-2 text-gray-600">
+              Best deals in International Holiday packages, handpicked by IRCTC, for Thailand, Dubai, Sri Lanka, Hong Kong, China, Macau, Bhutan, Nepal, U.K., Europe, USA, Australia etc. The packages are inclusive of sightseeing, meals, visa charges and overseas medical insurance to give you a hassle-free and memorable experience.
+            </p>
+          </div>
+        </div>
+
+        <!-- Domestic Air Packages -->
+        <div class="package-card bg-white rounded-lg shadow-md overflow-hidden">
+          <img src="domestic.jpeg" alt="Domestic Air Packages" class="package-image w-full">
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-blue-600">Domestic Air Packages</h3>
+            <p class="mt-2 text-gray-600">
+              Be it the spiritual devotee seeking blessings of Tirupati, Shirdi or Mata Vaishno Devi or the leisure traveller wanting to relish the Blue mountains of North East, Sand-dunes of Rajasthan, Hamlets of Ladakh, Wonders of Himalayas, Serene lakes or Picturesque Islands, IRCTC has it all.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div class="container mx-auto p-4 mt-6">
+      <div id="trainResults" class="space-y-4">
+        <!-- Train cards will be dynamically inserted here -->
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white p-8 mt-6">
+      <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+        <!-- Quick Links -->
+        <div>
+          <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+          <ul class="space-y-2">
+            <li><a href="Trainbooking.html" class="hover:text-gray-400">Train Booking</a></li>
+            <li><a href="Trainlist.html" class="hover:text-gray-400">Train Schedule</a></li>
+            <li><a href="Tracktrain.html" class="hover:text-gray-400">PNR Status</a></li>
+            <li><a href="#holiday" class="hover:text-gray-400">Holiday Packages</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact Us -->
+        <div>
+          <h3 class="text-lg font-bold mb-4">Contact Us</h3>
+          <ul class="space-y-2">
+            <li>Email: support@irctc.com</li>
+            <li>Phone: +91-1234567890</li>
+            <li>Address: IRCTC Head Office, New Delhi, India</li>
+          </ul>
+        </div>
+
+        <!-- Social Media -->
+        <div>
+          <h3 class="text-lg font-bold mb-4">Follow Us</h3>
+          <div class="flex space-x-4">
+            <a href="https://www.facebook.com/IRCTCofficial/" class="hover:text-gray-400"><i class="fab fa-facebook text-2xl"></i></a>
+            <a href="https://www.youtube.com/c/IRCTCOFFICIAL" class="hover:text-gray-400"><i class="fab fa-youtube text-2xl"></i></a>
+            <a href="https://www.instagram.com/irctc.official/?igshid=yyg5byow704l" class="hover:text-gray-400"><i class="fab fa-instagram text-2xl"></i></a>
+            <a href="https://www.linkedin.com/company/irctcofficial/" class="hover:text-gray-400"><i class="fab fa-linkedin text-2xl"></i></a>
+          </div>
+        </div>
+
+        <!-- Legal Information -->
+        <div>
+          <h3 class="text-lg font-bold mb-4">Legal</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="hover:text-gray-400">Privacy Policy</a></li>
+            <li><a href="#" class="hover:text-gray-400">Terms of Service</a></li>
+            <li><a href="#" class="hover:text-gray-400">Refund Policy</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Copyright -->
+      <div class="text-center mt-8 pt-4 border-t border-gray-700">
+        <p>&copy; 2023 IRCTC. All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    // Check if the user is already logged in
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    const username = localStorage.getItem('username');
+
+    if (isLoggedIn && username) {
+      // Hide login page
+      document.getElementById('loginPage').style.display = 'none';
+
+      // Show home page
+      document.getElementById('homePage').style.display = 'block';
+
+      // Display username in navbar
+      document.getElementById('usernameDisplay').textContent = `Welcome, ${username}`;
+    } else {
+      // Show login page
+      document.getElementById('loginPage').style.display = 'flex';
+      document.getElementById('homePage').style.display = 'none';
+    }
+
+    // Function to handle login
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      // Get username and password
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      // Simple validation (replace with actual authentication logic)
+      if (username && password) {
+        // Store login state in localStorage
+        localStorage.setItem('isLoggedIn', true);
+        localStorage.setItem('username', username);
+
+        // Hide login page
+        document.getElementById('loginPage').style.display = 'none';
+
+        // Show home page
+        document.getElementById('homePage').style.display = 'block';
+
+        // Display username in navbar
+        document.getElementById('usernameDisplay').textContent = `Welcome, ${username}`;
+      } else {
+        alert('Please enter a username and password.');
+      }
+    });
+
+    // Function to handle train search
+    document.getElementById('trainSearchForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const fromStation = document.getElementById('fromStation').value;
+      const toStation = document.getElementById('toStation').value;
+      const travelDate = document.getElementById('travelDate').value;
+      const classType = document.getElementById('class').value;
+      const quota = document.getElementById('quota').value;
+
+      // Simulate fetching train data (replace with actual API call)
+      const trainResults = [
+        { name: 'Rajdhani Express', number: '12345', departure: '08:00 AM', arrival: '06:00 PM', class: 'AC 3-Tier', quota: 'General' },
+        { name: 'Shatabdi Express', number: '67890', departure: '10:00 AM', arrival: '08:00 PM', class: 'AC 2-Tier', quota: 'Ladies' },
+      ];
+
+      const resultsContainer = document.getElementById('trainResults');
+      resultsContainer.innerHTML = '';
+
+      trainResults.forEach(train => {
+        const trainCard = `
+          <div class="bg-white p-4 rounded-lg shadow-md">
+            <h3 class="text-xl font-bold">${train.name} (${train.number})</h3>
+            <p class="text-gray-600">Departure: ${train.departure}</p>
+            <p class="text-gray-600">Arrival: ${train.arrival}</p>
+            <p class="text-gray-600">Class: ${train.class}</p>
+            <p class="text-gray-600">Quota: ${train.quota}</p>
+          </div>
+        `;
+        resultsContainer.innerHTML += trainCard;
+      });
+    });
+  </script>
+</body>
+</html>

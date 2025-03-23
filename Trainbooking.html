@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Train Booking - IRCTC</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url('train.webp') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            animation: fadeIn 1s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .booking-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+            width: 450px;
+            text-align: center;
+            transform: scale(0.95);
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .booking-container:hover {
+            transform: scale(1);
+        }
+        
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 24px;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+            position: relative;
+        }
+        
+        .input-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .input-group input,
+        .input-group select {
+            width: 95%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease-in-out;
+            background: #f9f9f9;
+        }
+        
+        .input-group input:focus,
+        .input-group select:focus {
+            border-color: #4A90E2;
+            box-shadow: 0px 0px 10px rgba(74, 144, 226, 0.5);
+            background: white;
+        }
+        
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            max-height: 150px;
+            overflow-y: auto;
+            z-index: 99;
+            width: 100%;
+            background: white;
+        }
+        
+        .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .autocomplete-items div:hover {
+            background: #f1f1f1;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 10px;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background: linear-gradient(135deg, #4A90E2, #9013FE);
+            color: white;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out, background 0.3s ease-in-out;
+        }
+        
+        .btn:hover {
+            background: linear-gradient(135deg, #357ABD, #7A0CF7);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="booking-container">
+        <h2>Book Your Train Tickets</h2>
+        <form action="#" method="post" class="booking-form">
+            <div class="input-group">
+                <label for="from">From</label>
+                <input type="text" id="from" name="from" placeholder="Type departure station" autocomplete="off" required>
+                <div class="autocomplete-items" id="from-suggestions"></div>
+            </div>
+            
+            <div class="input-group">
+                <label for="to">To</label>
+                <input type="text" id="to" name="to" placeholder="Type destination station" autocomplete="off" required>
+                <div class="autocomplete-items" id="to-suggestions"></div>
+            </div>
+            
+            <div class="input-group">
+                <label for="date">Journey Date</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="class">Class</label>
+                <select id="class" name="class" required>
+                    <option value="">Select Class</option>
+                    <option value="1A">First AC (1A)</option>
+                    <option value="2A">Second AC (2A)</option>
+                    <option value="3A">Third AC (3A)</option>
+                    <option value="SL">Sleeper (SL)</option>
+                    <option value="CC">Chair Car (CC)</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label for="quota">Quota</label>
+                <select id="quota" name="quota" required>
+                    <option value="">Select Quota</option>
+                    <option value="GN">General</option>
+                    <option value="TQ">Tatkal</option>
+                    <option value="PT">Premium Tatkal</option>
+                    <option value="LD">Ladies</option>
+                    <option value="SS">Senior Citizen</option>
+                </select>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="flexible" name="flexible">
+                <label for="flexible">Flexible with Dates</label>
+            </div>
+            
+            <button type="submit" class="btn">Search Trains</button>
+        </form>
+    </div>
+
+    <script>
+        // List of stations (you can expand this list)
+        const stations = [
+            "New Delhi (NDLS)",
+            "Mumbai Central (BCT)",
+            "Chennai Central (MAS)",
+            "Howrah Junction (HWH)",
+            "Bangalore City (SBC)",
+            "Secunderabad Junction (SC)",
+            "Ahmedabad Junction (ADI)",
+            "Pune Junction (PUNE)",
+            "Jaipur Junction (JP)",
+            "Lucknow Junction (LJN)",
+            "Kolkata (KOAA)",
+            "Hyderabad Deccan (HYD)",
+            "Patna Junction (PNBE)",
+            "Guwahati (GHY)",
+            "Chandigarh (CDG)"
+        ];
+
+        // Function to show autocomplete suggestions
+        function autocomplete(input, suggestionsContainer) {
+            input.addEventListener("input", function () {
+                const value = this.value.toLowerCase();
+                suggestionsContainer.innerHTML = ""; // Clear previous suggestions
+
+                if (!value) return;
+
+                const filteredStations = stations.filter(station =>
+                    station.toLowerCase().includes(value)
+                );
+
+                filteredStations.forEach(station => {
+                    const div = document.createElement("div");
+                    div.textContent = station;
+                    div.addEventListener("click", function () {
+                        input.value = station;
+                        suggestionsContainer.innerHTML = "";
+                    });
+                    suggestionsContainer.appendChild(div);
+                });
+            });
+
+            // Hide suggestions when clicking outside
+            document.addEventListener("click", function (e) {
+                if (e.target !== input) {
+                    suggestionsContainer.innerHTML = "";
+                }
+            });
+        }
+
+        // Initialize autocomplete for "From" and "To" fields
+        autocomplete(document.getElementById("from"), document.getElementById("from-suggestions"));
+        autocomplete(document.getElementById("to"), document.getElementById("to-suggestions"));
+    </script>
+</body>
+</html>
